@@ -1,0 +1,4 @@
+Place Amit Dewangan's resume PDF at public/resume.pdf.
+
+The portfolio Resume link is already wired to /resume.pdf, so replacing this
+placeholder with the actual PDF later will make the link open the resume.
