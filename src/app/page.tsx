@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const technologies = [
   "TypeScript",
@@ -25,47 +25,63 @@ const tools = [
   "Product Thinking",
 ];
 
-const tabs = {
-  projects: {
-    label: "Projects",
-    title: "Cloud workflow dashboard",
+const projects = [
+  {
+    name: "form-room",
     description:
-      "A placeholder project card for a production-style dashboard that tracks business workflows, user actions, and operational metrics from one clean interface.",
-    meta: "Next.js / APIs / PostgreSQL",
+      "A collaborative form builder that lets you design custom forms with typed fields, share them, and collect public submissions in one place.",
+    techStack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "tRPC",
+      "TanStack Query",
+      "Express",
+      "Drizzle ORM",
+      "PostgreSQL",
+    ],
+    problem:
+      "Removes the repetitive work of building form UIs and secure submission APIs from scratch, keeping form creation, field management, and response collection consistent behind a typed API and cookie-based auth.",
+    live: "https://form-builder-web-one.vercel.app/",
+    repo: "https://github.com/amito13/Form_builder",
   },
-  // blogs: {
-  //   label: "Blogs",
-  // },
-};
-
-// type Blog = {
-//   id: string;
-//   title: string;
-//   brief: string;
-//   url: string;
-//   publishedAt: string;
-//   readTimeInMinutes: number;
-// };
+  {
+    name: "pollx",
+    description:
+      "A modern real-time polling platform where users can create interactive polls, share them instantly, and visualize live results with a beautiful analytics dashboard.",
+    techStack: [
+      "React",
+      "Node.js",
+      "Express",
+      "PostgreSQL",
+      "Drizzle ORM",
+      "Socket.IO",
+      "Tailwind CSS",
+    ],
+    problem:
+      "Makes it easy to gather instant feedback from a group and watch results update live, without refreshing the page or waiting for answers.",
+    live: "https://poll-hazel.vercel.app",
+    repo: "https://github.com/amito13/Poll",
+  },
+];
 
 const socials = [
   {
     label: "GitHub",
     handle: "amitdewangan",
-    detail: "Code",
     action: "Follow",
     href: "https://github.com/amito13",
   },
   {
     label: "LinkedIn",
     handle: "Amit Dewangan",
-    detail: "Professional network",
     action: "Connect",
-    href: "hhttps://www.linkedin.com/in/amit-dewangan-a193b6319/",
+    href: "https://www.linkedin.com/in/amit-dewangan-a193b6319/",
   },
   {
     label: "Email",
     handle: "Amit",
-    detail: "Ideas and opportunities",
     action: "Email",
     href: "mailto:dewanganamit40@gmail.com",
   },
@@ -102,36 +118,7 @@ function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolea
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<keyof typeof tabs>("projects");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  // const [blogs, setBlogs] = useState<Blog[]>([]);
-  // const [blogsStatus, setBlogsStatus] = useState<
-  //   "loading" | "ready" | "error"
-  // >("loading");
-  const activeContent = tabs[activeTab];
-
-  // useEffect(() => {
-  //   const controller = new AbortController();
-
-  //   async function loadBlogs() {
-  //     try {
-  //       const response = await fetch("/api/blogs", {
-  //         signal: controller.signal,
-  //       });
-
-  //       if (!response.ok) throw new Error("Unable to fetch blogs");
-
-  //       setBlogs((await response.json()) as Blog[]);
-  //       setBlogsStatus("ready");
-  //     } catch (error) {
-  //       if (error instanceof DOMException && error.name === "AbortError") return;
-  //       setBlogsStatus("error");
-  //     }
-  //   }
-
-  //   loadBlogs();
-  //   return () => controller.abort();
-  // }, []);
 
   return (
     <main className="portfolio-shell" data-theme={theme}>
@@ -156,7 +143,7 @@ export default function Home() {
               rel="noreferrer"
               target="_blank"
             >
-              Resume
+              Resumebgdfdf
             </a>
           </aside>
 
@@ -189,92 +176,53 @@ export default function Home() {
           <Marquee items={tools} reverse />
         </div>
 
-        <section className="tabs-section" aria-label="Projects and blogs">
-          <div className="tab-buttons" role="tablist" aria-label="Portfolio tabs">
-            {(Object.keys(tabs) as Array<keyof typeof tabs>).map((tabKey) => (
-              <button
-                aria-controls="tab-panel"
-                aria-selected={activeTab === tabKey}
-                className="tab-button"
-                key={tabKey}
-                onClick={() => setActiveTab(tabKey)}
-                role="tab"
-                type="button"
-              >
-                {tabs[tabKey].label}
-              </button>
-            ))}
-          </div>
+        <section className="projects-panel" aria-label="Projects">
+          <h2 className="projects-panel__title">projects</h2>
 
-          {/* <div className="tab-panel" id="tab-panel" role="tabpanel">
-            <p className="panel-kicker">{activeContent.label}</p>
+          <ol className="project-list">
+            {projects.map((project, index) => (
+              <li className="project-list__item" key={project.name}>
+                <span className="project-list__name">
+                  #{project.name}
+                </span>
 
-            {activeTab === "projects" ? (
-              <article className="project-card">
-                <h2>{tabs.projects.title}</h2>
-                <p>{tabs.projects.description}</p>
-                <span>{tabs.projects.meta}</span>
-              </article>
-            ) : (
-              <div
-                aria-busy={blogsStatus === "loading"}
-                aria-live="polite"
-                className="blog-grid"
-              >
-                {blogsStatus === "loading" && (
-                  <p className="blogs-message">Loading blogs…</p>
-                )}
+                <p className="project-list__description">{project.description}</p>
 
-                {blogsStatus === "error" && (
-                  <p className="blogs-message">
-                    Blogs could not be loaded right now. Please try again later.
-                  </p>
-                )}
+                <p className="project-list__meta">
+                  <span className="project-list__meta-label">tech stack</span>
+                  {" — "}
+                  {project.techStack.join(", ")}
+                </p>
 
-                {blogsStatus === "ready" && blogs.length === 0 && (
-                  <p className="blogs-message">No blogs published yet.</p>
-                )}
+                <p className="project-list__meta">
+                  <span className="project-list__meta-label">problem it solves</span>
+                  {" — "}
+                  {project.problem}
+                </p>
 
-                {blogsStatus === "ready" && blogs.map((blog) => (
+                <span className="project-list__links">
                   <a
-                    aria-label={`Read ${blog.title} on Hashnode`}
-                    className="blog-card"
-                    href={blog.url}
-                    key={blog.id}
-                    rel="noreferrer"
-                    target="_blank"
+                    className="project-list__link"
+                    href={project.live}
+                    rel={project.live.startsWith("http") ? "noreferrer" : undefined}
+                    target={project.live.startsWith("http") ? "_blank" : undefined}
                   >
-                    <div className="blog-card__heading">
-                      <h2>{blog.title}</h2>
-                      <span aria-hidden="true" className="blog-card__arrow">
-                        ↗
-                      </span>
-                    </div>
-                    <p>{blog.brief}</p>
-                    <span className="blog-card__meta">
-                      {new Intl.DateTimeFormat("en", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }).format(new Date(blog.publishedAt))}
-                      {" · "}
-                      {blog.readTimeInMinutes} min read
-                    </span>
+                    live link
                   </a>
-                ))}
-              </div>
-            )}
-          </div> */}
+                  <span aria-hidden="true">—</span>
+                  <a
+                    className="project-list__link"
+                    href={project.repo}
+                    rel={project.repo.startsWith("http") ? "noreferrer" : undefined}
+                    target={project.repo.startsWith("http") ? "_blank" : undefined}
+                  >
+                    repo link
+                  </a>
+                </span>
+              </li>
+            ))}
+          </ol>
         </section>
-
-        {/* <section className="redirects-section" aria-label="Redirect links">
-          <a className="redirect-button" href="#tab-panel">
-            Project redirect
-          </a>
-          <a className="redirect-button" href="#social">
-            Social redirect
-          </a>
-        </section> */}
 
         <section className="social-panel" id="social" aria-label="Social links">
           <div className="social-panel__header">
@@ -283,28 +231,27 @@ export default function Home() {
             <p>Follow my work, start a conversation, or just say hello.</p>
           </div>
 
-          <div className="social-grid">
+          <ul className="social-list">
             {socials.map((social) => (
-              <a
-                className="social-card"
-                href={social.href}
-                key={social.label}
-                rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                target={social.href.startsWith("http") ? "_blank" : undefined}
-              >
-                <span className="social-card__mark">
-                  <SocialIcon label={social.label} />
-                </span>
-                <span className="social-card__content">
-                  <strong>{social.handle}</strong>
-                  <span>{social.detail}</span>
-                </span>
-                <span className="social-card__action">
-                  {social.action}
-                </span>
-              </a>
+              <li className="social-list__item" key={social.label}>
+                <a
+                  className="social-list__link"
+                  href={social.href}
+                  rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                >
+                  <span className="social-list__mark">
+                    <SocialIcon label={social.label} />
+                  </span>
+                  <span className="social-list__info">
+                    <strong>{social.handle}</strong>
+                    <span>{social.detail}</span>
+                  </span>
+                  <span className="social-list__action">{social.action}</span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       </section>
     </main>
