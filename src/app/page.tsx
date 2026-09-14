@@ -143,7 +143,7 @@ export default function Home() {
               rel="noreferrer"
               target="_blank"
             >
-              Resumebgdfdf
+                Resume
             </a>
           </aside>
 
@@ -245,7 +245,6 @@ export default function Home() {
                   </span>
                   <span className="social-list__info">
                     <strong>{social.handle}</strong>
-                    <span>{social.detail}</span>
                   </span>
                   <span className="social-list__action">{social.action}</span>
                 </a>
