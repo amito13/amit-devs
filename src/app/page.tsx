@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 const technologies = [
@@ -134,12 +135,21 @@ export default function Home() {
       <section className="portfolio-frame">
         <div className="intro-grid">
           <aside className="profile-column" aria-label="Profile">
-            <div className="profile-photo">Profile photo</div>
+            <div className="profile-photo">
+              <Image
+                src="/profile.jpg"
+                alt="Amit Dewangan"
+                fill
+                sizes="(max-width: 640px) 11rem, 12.5rem"
+                style={{ objectFit: "cover" }}
+                priority
+              />
+            </div>
             <h1>Amit Dewangan</h1>
             <p>Full-stack software engineer for the web and mobile</p>
             <a
               className="text-link"
-              href="/MyResume1.pdf"
+              href="/Amit_Dewangan_Resume (1).pdf"
               rel="noreferrer"
               target="_blank"
             >

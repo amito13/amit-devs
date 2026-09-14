@@ -124,6 +124,7 @@ button {
 }
 
 .profile-photo {
+  position: relative;
   display: grid;
   width: min(100%, 12.5rem);
   aspect-ratio: 1 / 1.1;
@@ -134,6 +135,7 @@ button {
   color: var(--foreground);
   font-size: clamp(1rem, 2vw, 1.35rem);
   font-weight: 800;
+  overflow: hidden;
 }
 
 .profile-column h1 {
