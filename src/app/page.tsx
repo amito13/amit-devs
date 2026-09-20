@@ -70,20 +70,23 @@ const projects = [
 const socials = [
   {
     label: "GitHub",
-    handle: "amitdewangan",
-    action: "Follow",
+    handle: "@amito13",
+    description: "Explore what I’m building.",
+    action: "View GitHub",
     href: "https://github.com/amito13",
   },
   {
     label: "LinkedIn",
     handle: "Amit Dewangan",
+    description: "Work, ideas, and everything between.",
     action: "Connect",
     href: "https://www.linkedin.com/in/amit-dewangan-a193b6319/",
   },
   {
     label: "Email",
-    handle: "Amit",
-    action: "Email",
+    handle: "dewanganamit40@gmail.com",
+    description: "Have an idea? Let’s talk.",
+    action: "Say hello",
     href: "mailto:dewanganamit40@gmail.com",
   },
 ];
@@ -101,7 +104,12 @@ function SocialIcon({ label }: { label: string }) {
   }
 
   if (label === "LinkedIn") return <span aria-hidden="true">in</span>;
-  return <span aria-hidden="true">@</span>;
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  );
 }
 
 function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolean }) {
@@ -125,11 +133,31 @@ export default function Home() {
     <main className="portfolio-shell" data-theme={theme}>
       <button
         aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+        title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
         className="theme-toggle"
         onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
         type="button"
       >
-        {theme === "dark" ? "Light" : "Dark"}
+        <svg
+          aria-hidden="true"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {theme === "dark" ? (
+            <>
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+            </>
+          ) : (
+            <path d="M20.9 13.3A9 9 0 0 1 10.7 3.1a9 9 0 1 0 10.2 10.2Z" />
+          )}
+        </svg>
       </button>
 
       <section className="portfolio-frame">
@@ -236,9 +264,9 @@ export default function Home() {
 
         <section className="social-panel" id="social" aria-label="Social links">
           <div className="social-panel__header">
-            <p className="panel-kicker">Find me online</p>
-            <h2>Let&apos;s connect</h2>
-            <p>Follow my work, start a conversation, or just say hello.</p>
+            <p className="panel-kicker">Good things start with a conversation</p>
+            <h2>Let&apos;s connect<span>.</span></h2>
+            <p>Find me around the web, or drop a note in my inbox.</p>
           </div>
 
           <ul className="social-list">
@@ -250,12 +278,17 @@ export default function Home() {
                   rel={social.href.startsWith("http") ? "noreferrer" : undefined}
                   target={social.href.startsWith("http") ? "_blank" : undefined}
                 >
-                  <span className="social-list__mark">
-                    <SocialIcon label={social.label} />
+                  <span className="social-list__top">
+                    <span className="social-list__mark">
+                      <SocialIcon label={social.label} />
+                    </span>
+                    <span className="social-list__arrow" aria-hidden="true">↗</span>
                   </span>
                   <span className="social-list__info">
-                    <strong>{social.handle}</strong>
+                    <strong>{social.label}</strong>
+                    <span>{social.description}</span>
                   </span>
+                  <span className="social-list__handle">{social.handle}</span>
                   <span className="social-list__action">{social.action}</span>
                 </a>
               </li>
