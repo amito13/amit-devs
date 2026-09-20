@@ -140,9 +140,9 @@ export default function Home() {
                 src="/profile.jpg"
                 alt="Amit Dewangan"
                 fill
-                sizes="(max-width: 640px) 11rem, 12.5rem"
-                style={{ objectFit: "cover" }}
-                priority
+                sizes="(max-width: 520px) 11rem, 12.5rem"
+                style={{ objectFit: "cover", objectPosition: "center top" }}
+                preload
               />
             </div>
             <h1>Amit Dewangan</h1>
