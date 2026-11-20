@@ -39,7 +39,18 @@ const tools = [
   "Product Thinking",
 ];
 
-const projects = [
+type Project = {
+  name: string;
+  tagline: string;
+  kind: string;
+  description: string;
+  techStack: string[];
+  problem: string;
+  live?: string;
+  repo: string;
+};
+
+const projects: Project[] = [
   {
     name: "form-room",
     tagline: "Form builder",
@@ -82,6 +93,25 @@ const projects = [
     live: "https://poll-hazel.vercel.app",
     repo: "https://github.com/amito13/Poll",
   },
+  {
+    name: "mobleet",
+    tagline: "Coding practice on mobile",
+    kind: "react native",
+    description:
+      "A mobile coding-practice app: browse and filter algorithm problems, read examples and constraints, and solve them in JavaScript, Python, or Java in a built-in code editor.",
+    techStack: [
+      "Expo",
+      "React Native",
+      "TypeScript",
+      "Supabase",
+      "CodeBox",
+      "Expo Router",
+      "PostgreSQL",
+    ],
+    problem:
+      "Makes interview practice possible away from a laptop: submissions run safely in CodeBox, an open-source sandbox for code execution, with per-test-case results, Google sign-in, and a progress heatmap.",
+    repo: "https://github.com/amito13/mobleet",
+  },
 ];
 
 const socials: Array<{ platform: SocialPlatform; handle: string; href: string }> = [
@@ -97,7 +127,7 @@ const socials: Array<{ platform: SocialPlatform; handle: string; href: string }>
     handle: "dewanganamit40",
     href: "https://www.instagram.com/dewanganamit40",
   },
-  { platform: "Email", handle: "email me", href: `mailto:${EMAIL}` },
+  { platform: "Email", handle: "email", href: `mailto:${EMAIL}` },
 ];
 
 function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolean }) {
@@ -148,9 +178,11 @@ function ProjectGrid() {
             </p>
 
             <div className="project-card__links">
-              <a href={project.live} rel="noreferrer" target="_blank">
-                live ↗
-              </a>
+              {project.live && (
+                <a href={project.live} rel="noreferrer" target="_blank">
+                  live ↗
+                </a>
+              )}
               <a href={project.repo} rel="noreferrer" target="_blank">
                 repo ↗
               </a>
