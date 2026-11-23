@@ -114,6 +114,33 @@ const projects: Project[] = [
   },
 ];
 
+type Education = {
+  degree: string;
+  school: string;
+  period: string;
+  score?: string;
+};
+
+const education: Education[] = [
+  {
+    degree: "Bachelor of Computer Applications (BCA)",
+    school: "Pragati College",
+    period: "2024 – 2027",
+    score: "SGPA 8.6",
+  },
+];
+
+type Certificate = {
+  title: string;
+  issuer: string;
+  date: string;
+  /** Verification URL, or a file in /public such as "/certificates/name.pdf". */
+  href?: string;
+};
+
+// Add certificates here; the section stays hidden while this list is empty.
+const certificates: Certificate[] = [];
+
 const socials: Array<{ platform: SocialPlatform; handle: string; href: string }> = [
   { platform: "GitHub", handle: GITHUB_USER, href: `https://github.com/${GITHUB_USER}` },
   {
@@ -294,6 +321,50 @@ export default async function Home() {
             />
 
             <GitHubCard calendar={calendar} />
+
+            <section className="info-section" aria-label="Education">
+              <div className="section-label">
+                <span>Education</span>
+              </div>
+              <ul className="info-list">
+                {education.map((item) => (
+                  <li className="info-card" key={item.degree}>
+                    <div className="info-card__head">
+                      <h3>{item.degree}</h3>
+                      <span className="info-card__meta">{item.period}</span>
+                    </div>
+                    <p className="info-card__sub">
+                      {item.school}
+                      {item.score && <> · {item.score}</>}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {certificates.length > 0 && (
+              <section className="info-section" aria-label="Certificates">
+                <div className="section-label">
+                  <span>Certificates</span>
+                </div>
+                <ul className="info-list info-list--grid">
+                  {certificates.map((cert) => (
+                    <li className="info-card" key={cert.title}>
+                      <div className="info-card__head">
+                        <h3>{cert.title}</h3>
+                        <span className="info-card__meta">{cert.date}</span>
+                      </div>
+                      <p className="info-card__sub">{cert.issuer}</p>
+                      {cert.href && (
+                        <a className="info-card__link" href={cert.href} rel="noreferrer" target="_blank">
+                          view certificate ↗
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             <section className="youtube-section" aria-label="YouTube">
               <div className="section-label">
