@@ -133,13 +133,29 @@ const education: Education[] = [
 type Certificate = {
   title: string;
   issuer: string;
-  date: string;
-  /** Verification URL, or a file in /public such as "/certificates/name.pdf". */
-  href?: string;
+  /** Preview image in /public. */
+  image: string;
+  /** Original certificate file in /public. */
+  file: string;
+  verify: string;
 };
 
-// Add certificates here; the section stays hidden while this list is empty.
-const certificates: Certificate[] = [];
+const certificates: Certificate[] = [
+  {
+    title: "Full Stack Web Development Cohort 2026",
+    issuer: "ChaiCode",
+    image: "/certificates/web-dev-cohort.png",
+    file: "/certificates/13234214_250927.pdf",
+    verify: "https://courses.chaicode.com/learn/certificate/13234214-250927",
+  },
+  {
+    title: "Mobile Development Cohort",
+    issuer: "ChaiCode",
+    image: "/certificates/mobile-dev-cohort.png",
+    file: "/certificates/moible-dev.pdf",
+    verify: "https://courses.chaicode.com/learn/certificate/13234214-265065",
+  },
+];
 
 const socials: Array<{ platform: SocialPlatform; handle: string; href: string }> = [
   { platform: "GitHub", handle: GITHUB_USER, href: `https://github.com/${GITHUB_USER}` },
@@ -172,6 +188,55 @@ function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolea
 }
 
 const VISIBLE_STACK = 4;
+
+function EducationList() {
+  return (
+    <ul className="info-list">
+      {education.map((item) => (
+        <li className="info-card" key={item.degree}>
+          <div className="info-card__head">
+            <h3>{item.degree}</h3>
+            <span className="info-card__meta">{item.period}</span>
+          </div>
+          <p className="info-card__sub">
+            {item.school}
+            {item.score && <> · {item.score}</>}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function CertificateGrid() {
+  return (
+    <ul className="info-list info-list--grid">
+      {certificates.map((cert) => (
+        <li className="info-card" key={cert.title}>
+          <a className="info-card__thumb" href={cert.file} rel="noreferrer" target="_blank">
+            <Image
+              src={cert.image}
+              alt={`${cert.title} certificate`}
+              width={1052}
+              height={745}
+              sizes="(max-width: 760px) 100vw, 22rem"
+            />
+          </a>
+          <h3 className="info-card__title">{cert.title}</h3>
+          <p className="info-card__sub">{cert.issuer}</p>
+          <div className="info-card__links">
+            <a href={cert.verify} rel="noreferrer" target="_blank">
+              verify ↗
+            </a>
+            <a href={cert.file} rel="noreferrer" target="_blank">
+              pdf ↗
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 function ProjectGrid() {
   return (
@@ -313,58 +378,16 @@ export default async function Home() {
             </div>
 
             <WorkTabs
-              label="Projects and writing"
+              label="Projects, writing, education and certificates"
               panels={[
                 { id: "projects", label: "Projects", content: <ProjectGrid /> },
                 { id: "writing", label: "Writing", content: <PostList posts={posts} /> },
+                { id: "education", label: "Education", content: <EducationList /> },
+                { id: "certificates", label: "Certificates", content: <CertificateGrid /> },
               ]}
             />
 
             <GitHubCard calendar={calendar} />
-
-            <section className="info-section" aria-label="Education">
-              <div className="section-label">
-                <span>Education</span>
-              </div>
-              <ul className="info-list">
-                {education.map((item) => (
-                  <li className="info-card" key={item.degree}>
-                    <div className="info-card__head">
-                      <h3>{item.degree}</h3>
-                      <span className="info-card__meta">{item.period}</span>
-                    </div>
-                    <p className="info-card__sub">
-                      {item.school}
-                      {item.score && <> · {item.score}</>}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            {certificates.length > 0 && (
-              <section className="info-section" aria-label="Certificates">
-                <div className="section-label">
-                  <span>Certificates</span>
-                </div>
-                <ul className="info-list info-list--grid">
-                  {certificates.map((cert) => (
-                    <li className="info-card" key={cert.title}>
-                      <div className="info-card__head">
-                        <h3>{cert.title}</h3>
-                        <span className="info-card__meta">{cert.date}</span>
-                      </div>
-                      <p className="info-card__sub">{cert.issuer}</p>
-                      {cert.href && (
-                        <a className="info-card__link" href={cert.href} rel="noreferrer" target="_blank">
-                          view certificate ↗
-                        </a>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
 
             <section className="youtube-section" aria-label="YouTube">
               <div className="section-label">

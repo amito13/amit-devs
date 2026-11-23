@@ -11,6 +11,12 @@
   --line-soft: #363636;
   --accent: #f6f2e8;
   --scheme: dark;
+  /* GitHub contribution graph, level 0 (none) to 4 (most) */
+  --gh-0: #262626;
+  --gh-1: #0e4429;
+  --gh-2: #006d32;
+  --gh-3: #26a641;
+  --gh-4: #39d353;
   --frame: var(--background);
   --toggle-hover-background: var(--foreground);
   --toggle-hover-foreground: var(--background);
@@ -33,6 +39,11 @@
   --line-soft: #d2d4c7;
   --accent: #496044;
   --scheme: light;
+  --gh-0: #dddbd1;
+  --gh-1: #9be9a8;
+  --gh-2: #40c463;
+  --gh-3: #30a14e;
+  --gh-4: #216e39;
   --toggle-hover-background: var(--panel-strong);
   --toggle-hover-foreground: var(--accent);
 }
@@ -683,23 +694,23 @@ button {
 .gh-cell {
   aspect-ratio: 1;
   border-radius: 2px;
-  background: var(--line-soft);
+  background: var(--gh-0);
 }
 
 .gh-cell[data-level="1"] {
-  background: color-mix(in srgb, var(--foreground) 28%, transparent);
+  background: var(--gh-1);
 }
 
 .gh-cell[data-level="2"] {
-  background: color-mix(in srgb, var(--foreground) 48%, transparent);
+  background: var(--gh-2);
 }
 
 .gh-cell[data-level="3"] {
-  background: color-mix(in srgb, var(--foreground) 72%, transparent);
+  background: var(--gh-3);
 }
 
 .gh-cell[data-level="4"] {
-  background: var(--foreground);
+  background: var(--gh-4);
 }
 
 .gh-cell--empty {
@@ -748,11 +759,6 @@ button {
 }
 
 /* Education & certificates */
-.info-section {
-  display: grid;
-  gap: 1rem;
-}
-
 .info-list {
   display: grid;
   gap: 0.85rem;
@@ -806,19 +812,51 @@ button {
   font-size: 0.9rem;
 }
 
-.info-card__link {
-  align-self: flex-start;
-  border-radius: 4px;
+.info-card__title {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.info-card__thumb {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.info-card__thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 300ms ease;
+}
+
+.info-card__thumb:hover img {
+  transform: scale(1.03);
+}
+
+.info-card__links {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
   font-family: var(--font-code);
   font-size: 0.78rem;
+}
+
+.info-card__links a {
+  border-radius: 4px;
   transition: color 180ms ease;
 }
 
-.info-card__link:hover {
+.info-card__links a:hover {
   color: var(--accent);
 }
 
-.info-card__link:focus-visible {
+.info-card__links a:focus-visible,
+.info-card__thumb:focus-visible {
   outline: 2px solid var(--foreground);
   outline-offset: 2px;
 }
