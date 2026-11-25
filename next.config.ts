@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
         hostname: "i.ytimg.com",
         pathname: "/vi/**",
       },
+      {
+        // App screenshots read from project READMEs (see src/lib/screens.ts).
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+        pathname: "/amito13/**",
+        search: "",
+      },
     ],
   },
 };

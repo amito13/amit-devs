@@ -2,6 +2,7 @@ import Image from "next/image";
 import { CopyEmailButton } from "@/components/copy-email-button";
 import { GitHubCard } from "@/components/github-card";
 import { PostList } from "@/components/post-list";
+import { ScreenViewer } from "@/components/screen-viewer";
 import { Scribble } from "@/components/scribble";
 import { SocialBadge, type SocialPlatform } from "@/components/social-icons";
 import { ThemeShell } from "@/components/theme-shell";
@@ -9,9 +10,10 @@ import { VideoGrid } from "@/components/video-grid";
 import { WorkTabs } from "@/components/work-tabs";
 import { getBlogPosts } from "@/lib/blog";
 import { GITHUB_USER, getContributions } from "@/lib/github";
+import { type AppScreen, getAppScreens } from "@/lib/screens";
 import { YOUTUBE_HANDLE, YOUTUBE_URL, getLatestVideos } from "@/lib/youtube";
 
-// GitHub activity, YouTube uploads and blog posts are refreshed at most once an hour.
+// GitHub activity, app screens, YouTube uploads and blog posts are refreshed at most once an hour.
 export const revalidate = 3600;
 
 const EMAIL = "dewanganamit40@gmail.com";
@@ -48,6 +50,8 @@ type Project = {
   problem: string;
   live?: string;
   repo: string;
+  /** Mobile app: shows the images under "Screenshots" in the repo's README as a swipe viewer. */
+  mobile?: boolean;
 };
 
 const projects: Project[] = [
@@ -111,6 +115,7 @@ const projects: Project[] = [
     problem:
       "Makes interview practice possible away from a laptop: submissions run safely in CodeBox, an open-source sandbox for code execution, with per-test-case results, Google sign-in, and a progress heatmap.",
     repo: "https://github.com/amito13/mobleet",
+    mobile: true,
   },
 ];
 
@@ -238,47 +243,64 @@ function CertificateGrid() {
   );
 }
 
-function ProjectGrid() {
+function ProjectDetails({ project }: { project: Project }) {
+  const shown = project.techStack.slice(0, VISIBLE_STACK);
+  const rest = project.techStack.slice(VISIBLE_STACK);
+
+  return (
+    <>
+      <div className="project-card__head">
+        <h3>{project.name}</h3>
+        <span className="project-card__kind">{project.kind}</span>
+      </div>
+      <p className="project-card__tagline">{project.tagline}</p>
+
+      <ul className="project-card__stack" aria-label="Tech stack">
+        {shown.map((tech) => (
+          <li key={tech}>{tech}</li>
+        ))}
+        {rest.length > 0 && (
+          <li className="project-card__more" title={rest.join(", ")} aria-label={`and ${rest.join(", ")}`}>
+            +{rest.length}
+          </li>
+        )}
+      </ul>
+
+      <p className="project-card__description">{project.description}</p>
+      <p className="project-card__problem">
+        <span>solves</span> — {project.problem}
+      </p>
+
+      <div className="project-card__links">
+        {project.live && (
+          <a href={project.live} rel="noreferrer" target="_blank">
+            live ↗
+          </a>
+        )}
+        <a href={project.repo} rel="noreferrer" target="_blank">
+          repo ↗
+        </a>
+      </div>
+    </>
+  );
+}
+
+function ProjectGrid({ screens }: { screens: Record<string, AppScreen[]> }) {
   return (
     <ul className="project-grid">
       {projects.map((project) => {
-        const shown = project.techStack.slice(0, VISIBLE_STACK);
-        const rest = project.techStack.slice(VISIBLE_STACK);
+        const appScreens = screens[project.name] ?? [];
 
-        return (
+        return appScreens.length > 0 ? (
+          <li className="project-card project-card--wide" key={project.name}>
+            <div className="project-card__copy">
+              <ProjectDetails project={project} />
+            </div>
+            <ScreenViewer screens={appScreens} name={project.name} />
+          </li>
+        ) : (
           <li className="project-card" key={project.name}>
-            <div className="project-card__head">
-              <h3>{project.name}</h3>
-              <span className="project-card__kind">{project.kind}</span>
-            </div>
-            <p className="project-card__tagline">{project.tagline}</p>
-
-            <ul className="project-card__stack" aria-label="Tech stack">
-              {shown.map((tech) => (
-                <li key={tech}>{tech}</li>
-              ))}
-              {rest.length > 0 && (
-                <li className="project-card__more" title={rest.join(", ")} aria-label={`and ${rest.join(", ")}`}>
-                  +{rest.length}
-                </li>
-              )}
-            </ul>
-
-            <p className="project-card__description">{project.description}</p>
-            <p className="project-card__problem">
-              <span>solves</span> — {project.problem}
-            </p>
-
-            <div className="project-card__links">
-              {project.live && (
-                <a href={project.live} rel="noreferrer" target="_blank">
-                  live ↗
-                </a>
-              )}
-              <a href={project.repo} rel="noreferrer" target="_blank">
-                repo ↗
-              </a>
-            </div>
+            <ProjectDetails project={project} />
           </li>
         );
       })}
@@ -286,11 +308,21 @@ function ProjectGrid() {
   );
 }
 
+async function getProjectScreens() {
+  const entries = await Promise.all(
+    projects
+      .filter((project) => project.mobile)
+      .map(async (project) => [project.name, await getAppScreens(project.repo)] as const),
+  );
+  return Object.fromEntries(entries);
+}
+
 export default async function Home() {
-  const [calendar, videos, posts] = await Promise.all([
+  const [calendar, videos, posts, screens] = await Promise.all([
     getContributions(),
     getLatestVideos(),
     getBlogPosts(),
+    getProjectScreens(),
   ]);
 
   return (
@@ -380,7 +412,7 @@ export default async function Home() {
             <WorkTabs
               label="Projects, writing, education and certificates"
               panels={[
-                { id: "projects", label: "Projects", content: <ProjectGrid /> },
+                { id: "projects", label: "Projects", content: <ProjectGrid screens={screens} /> },
                 { id: "writing", label: "Writing", content: <PostList posts={posts} /> },
                 { id: "education", label: "Education", content: <EducationList /> },
                 { id: "certificates", label: "Certificates", content: <CertificateGrid /> },
