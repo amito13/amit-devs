@@ -7,6 +7,8 @@ export type Video = {
   title: string;
   url: string;
   thumbnail: string;
+  /** True for a real 9:16 cover; false when the vertical picture sits inside a wide one. */
+  tallThumbnail: boolean;
   isShort: boolean;
   publishedLabel: string;
 };
@@ -31,6 +33,28 @@ function cleanTitle(title: string) {
   return withoutTags || title;
 }
 
+async function exists(url: string) {
+  try {
+    const response = await fetch(url, { method: "HEAD", next: { revalidate: 3600 } });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Sharpest cover available. Shorts have a 1080x1920 cover (oardefault) unless a custom
+ * thumbnail was uploaded; those only keep the custom design in the 1280x720 cover.
+ */
+async function getThumbnail(id: string, isShort: boolean) {
+  const base = `https://i.ytimg.com/vi/${id}`;
+  if (isShort && (await exists(`${base}/oardefault.jpg`))) {
+    return { thumbnail: `${base}/oardefault.jpg`, tallThumbnail: true };
+  }
+  const wide = (await exists(`${base}/maxresdefault.jpg`)) ? "maxresdefault" : "hqdefault";
+  return { thumbnail: `${base}/${wide}.jpg`, tallThumbnail: false };
+}
+
 /** Latest uploads from the channel's public RSS feed (up to 15, newest first). */
 export async function getLatestVideos(): Promise<Video[]> {
   try {
@@ -45,7 +69,7 @@ export async function getLatestVideos(): Promise<Video[]> {
 
     const xml = await response.text();
 
-    return xml
+    const videos = xml
       .split("<entry>")
       .slice(1)
       .flatMap((entry) => {
@@ -60,12 +84,18 @@ export async function getLatestVideos(): Promise<Video[]> {
             id,
             title: cleanTitle(decodeEntities(title)),
             url,
-            thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
             isShort: url.includes("/shorts/"),
             publishedLabel: published ? DATE_FORMAT.format(new Date(published)) : "",
           },
         ];
       });
+
+    return await Promise.all(
+      videos.map(async (video) => ({
+        ...video,
+        ...(await getThumbnail(video.id, video.isShort)),
+      })),
+    );
   } catch (error) {
     console.error("Unable to fetch YouTube videos:", error);
     return [];

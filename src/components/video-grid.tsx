@@ -7,6 +7,10 @@ import type { Video } from "@/lib/youtube";
 const INITIAL_COUNT = 4;
 const EXPANDED_COUNT = 12;
 
+// A wide cover is zoomed to fill the tall card, so it is drawn about 3.2x wider than the card.
+const TALL_SIZES = "(max-width: 760px) 46vw, 13rem";
+const WIDE_SIZES = "(max-width: 760px) 146vw, 41rem";
+
 export function VideoGrid({ videos }: { videos: Video[] }) {
   const [expanded, setExpanded] = useState(false);
   const visible = videos.slice(0, expanded ? EXPANDED_COUNT : INITIAL_COUNT);
@@ -23,7 +27,8 @@ export function VideoGrid({ videos }: { videos: Video[] }) {
                   src={video.thumbnail}
                   alt=""
                   fill
-                  sizes="(max-width: 760px) 45vw, 12rem"
+                  sizes={video.tallThumbnail ? TALL_SIZES : WIDE_SIZES}
+                  quality={90}
                 />
                 <span className="video-card__play" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="currentColor">
