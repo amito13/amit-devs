@@ -219,13 +219,13 @@ button {
 .bio-copy {
   display: grid;
   gap: clamp(1.2rem, 3vw, 1.75rem);
-  max-width: 46rem;
   color: var(--foreground);
 }
 
 .bio-copy p {
   margin: 0;
-  font-size: clamp(1rem, 1.2vw, 1.0625rem);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.25vw, 1.0625rem);
   font-weight: 400;
   line-height: 1.7;
 }

@@ -118,6 +118,29 @@ const projects: Project[] = [
     repo: "https://github.com/amito13/mobleet",
     mobile: true,
   },
+  {
+    name: "study-buddy",
+    tagline: "AI study space",
+    kind: "react native · ai",
+    description:
+      "Turns PDFs, notes, and web articles into study sets, then helps you learn them with AI summaries, flashcard decks, and a chat that answers from your own sources.",
+    techStack: [
+      "Expo",
+      "React Native",
+      "TypeScript",
+      "Supabase",
+      "Claude",
+      "Express",
+      "Bun",
+      "TanStack Query",
+      "Zustand",
+      "Firecrawl",
+    ],
+    problem:
+      "Keeps course material and practice in one place: sources are extracted and chunked, so summaries, flashcards, and chat answers stay grounded in what you uploaded.",
+    repo: "https://github.com/amito13/Study-buddy",
+    mobile: true,
+  },
 ];
 
 type Education = {
