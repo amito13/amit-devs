@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CopyEmailButton } from "@/components/copy-email-button";
+import { ExpertiseGrid } from "@/components/expertise";
 import { GitHubCard } from "@/components/github-card";
 import { PostList } from "@/components/post-list";
 import { ScreenViewer } from "@/components/screen-viewer";
@@ -410,9 +411,10 @@ export default async function Home() {
             </div>
 
             <WorkTabs
-              label="Projects, writing, education and certificates"
+              label="Projects, technical expertise, writing, education and certificates"
               panels={[
                 { id: "projects", label: "Projects", content: <ProjectGrid screens={screens} /> },
+                { id: "expertise", label: "Technical expertise", content: <ExpertiseGrid /> },
                 { id: "writing", label: "Writing", content: <PostList posts={posts} /> },
                 { id: "education", label: "Education", content: <EducationList /> },
                 { id: "certificates", label: "Certificates", content: <CertificateGrid /> },
