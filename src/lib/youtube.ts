@@ -55,19 +55,33 @@ async function getThumbnail(id: string, isShort: boolean) {
   return { thumbnail: `${base}/${wide}.jpg`, tallThumbnail: false };
 }
 
+const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const FEED_ATTEMPTS = 3;
+
+/** YouTube's feed returns short bursts of 503s, so try a few times before giving up. */
+async function fetchFeed() {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < FEED_ATTEMPTS; attempt++) {
+    if (attempt > 0) await new Promise((resolve) => setTimeout(resolve, 800 * attempt));
+    try {
+      const response = await fetch(
+        FEED_URL,
+        // Retries skip the cache so a stored failure is never reused.
+        attempt === 0 ? { next: { revalidate: 3600 } } : { cache: "no-store" },
+      );
+      if (response.ok) return await response.text();
+      lastError = new Error(`YouTube feed responded with ${response.status}`);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError;
+}
+
 /** Latest uploads from the channel's public RSS feed (up to 15, newest first). */
 export async function getLatestVideos(): Promise<Video[]> {
   try {
-    const response = await fetch(
-      `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`,
-      { next: { revalidate: 3600 } },
-    );
-
-    if (!response.ok) {
-      throw new Error(`YouTube feed responded with ${response.status}`);
-    }
-
-    const xml = await response.text();
+    const xml = await fetchFeed();
 
     const videos = xml
       .split("<entry>")
@@ -98,6 +112,11 @@ export async function getLatestVideos(): Promise<Video[]> {
     );
   } catch (error) {
     console.error("Unable to fetch YouTube videos:", error);
+    // On a live site, failing the hourly refresh makes Next.js keep serving the last
+    // page that had videos. During a build or in dev there is no such page yet.
+    const isLiveRefresh =
+      process.env.NODE_ENV === "production" && process.env.NEXT_PHASE !== "phase-production-build";
+    if (isLiveRefresh) throw error;
     return [];
   }
 }
