@@ -50,6 +50,8 @@ type Project = {
   techStack: string[];
   problem: string;
   live?: string;
+  /** Text for the live link; defaults to "live". */
+  liveLabel?: string;
   repo: string;
   /** Mobile app: shows the images under "Screenshots" in the repo's README as a swipe viewer. */
   mobile?: boolean;
@@ -99,6 +101,30 @@ const projects: Project[] = [
     repo: "https://github.com/amito13/Poll",
   },
   {
+    name: "outdo",
+    tagline: "Gym tracker, live on Google Play",
+    kind: "react native",
+    description:
+      "An offline-first gym tracker that saves every workout set by set and shows what you lifted last time beside today's inputs, so you always know the number to beat.",
+    techStack: [
+      "Expo",
+      "React Native",
+      "TypeScript",
+      "SQLite",
+      "Supabase",
+      "Zustand",
+      "Expo Router",
+      "Expo Notifications",
+      "EAS Build",
+    ],
+    problem:
+      "Most people forget last session's weights and reps. OUTDO keeps them next to today's sets, works fully offline, syncs to Supabase when you're back online, and reminds you on training days.",
+    live: "https://play.google.com/store/apps/details?id=com.amit1312.Trackyourself",
+    liveLabel: "google play",
+    repo: "https://github.com/amito13/trackyourself",
+    mobile: true,
+  },
+  {
     name: "mobleet",
     tagline: "Coding practice on mobile",
     kind: "react native",
@@ -116,29 +142,6 @@ const projects: Project[] = [
     problem:
       "Makes interview practice possible away from a laptop: submissions run safely in CodeBox, an open-source sandbox for code execution, with per-test-case results, Google sign-in, and a progress heatmap.",
     repo: "https://github.com/amito13/mobleet",
-    mobile: true,
-  },
-  {
-    name: "study-buddy",
-    tagline: "AI study space",
-    kind: "react native · ai",
-    description:
-      "Turns PDFs, notes, and web articles into study sets, then helps you learn them with AI summaries, flashcard decks, and a chat that answers from your own sources.",
-    techStack: [
-      "Expo",
-      "React Native",
-      "TypeScript",
-      "Supabase",
-      "Claude",
-      "Express",
-      "Bun",
-      "TanStack Query",
-      "Zustand",
-      "Firecrawl",
-    ],
-    problem:
-      "Keeps course material and practice in one place: sources are extracted and chunked, so summaries, flashcards, and chat answers stay grounded in what you uploaded.",
-    repo: "https://github.com/amito13/Study-buddy",
     mobile: true,
   },
 ];
@@ -298,7 +301,7 @@ function ProjectDetails({ project }: { project: Project }) {
       <div className="project-card__links">
         {project.live && (
           <a href={project.live} rel="noreferrer" target="_blank">
-            live ↗
+            {project.liveLabel ?? "live"} ↗
           </a>
         )}
         <a href={project.repo} rel="noreferrer" target="_blank">

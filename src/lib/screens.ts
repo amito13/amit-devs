@@ -34,6 +34,14 @@ function resolve(src: string, base: string) {
   }
 }
 
+/** First <b>…</b> after an HTML <img>, before the cell or the next image ends. */
+function boldTitleAfter(lines: string[], index: number, cell: string, offset: number) {
+  const rest = [cell.slice(offset).replace(/^<img\b[^>]*>/i, ""), ...lines.slice(index + 1, index + 4)].join("\n");
+  const stop = rest.search(/<\/td>|<img\b/i);
+  const scope = stop === -1 ? rest : rest.slice(0, stop);
+  return /<b>([^<]+)<\/b>/i.exec(scope)?.[1].trim() ?? "";
+}
+
 /** Every image under the README's "Screenshots" (or "Screens") heading, in order. */
 export function parseScreens(readme: string, base: string): AppScreen[] {
   const lines = readme.split(/\r?\n/);
@@ -65,8 +73,11 @@ export function parseScreens(readme: string, base: string): AppScreen[] {
         const alt = (match[1] ?? attribute(match[0], "alt") ?? "").trim();
         const href = src && resolve(src, base);
         if (!href) continue;
-        // Table layouts name each screen in the header row, which reads better than alt text.
-        const title = headers[column]?.includes("![") ? "" : headers[column];
+        // Markdown tables name each screen in the header row; HTML layouts usually put a
+        // <b>title</b> right after the <img>. Both read better than alt text.
+        const title =
+          (headers[column]?.includes("![") ? "" : headers[column]) ||
+          (match[2] === undefined ? boldTitleAfter(lines, index, cell, match.index ?? 0) : "");
         const caption = title || alt || `Screen ${screens.length + 1}`;
         screens.push({ src: href, caption, alt: alt || caption });
       }

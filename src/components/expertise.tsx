@@ -27,7 +27,7 @@ const areas: Area[] = [
       </>
     ),
     skills: ["Node.js", "Express.js", "tRPC", "REST APIs", "Socket.IO", "Auth & authorization"],
-    usedIn: ["form-room API", "pollx live votes", "mobleet submissions", "study-buddy API"],
+    usedIn: ["form-room API", "pollx live votes", "mobleet submissions"],
   },
   {
     title: "Frontend",
@@ -51,7 +51,7 @@ const areas: Area[] = [
       </>
     ),
     skills: ["React Native", "Expo", "Expo Router", "Mobile UI/UX", "Google Play Console", "Closed testing"],
-    usedIn: ["mobleet", "study-buddy"],
+    usedIn: ["outdo on Google Play", "mobleet"],
   },
   {
     title: "Data & storage",
@@ -62,8 +62,8 @@ const areas: Area[] = [
         <path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
       </>
     ),
-    skills: ["PostgreSQL", "Drizzle ORM", "Supabase", "MongoDB", "Firebase", "SQL"],
-    usedIn: ["form-room", "pollx", "mobleet", "study-buddy"],
+    skills: ["PostgreSQL", "Drizzle ORM", "Supabase", "SQLite", "MongoDB", "Firebase", "SQL"],
+    usedIn: ["form-room", "pollx", "mobleet", "outdo"],
   },
   {
     title: "DevOps & tooling",
